@@ -1,18 +1,30 @@
-import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material'
+import { AppBar, Toolbar, Typography } from '@mui/material'
+import { Link } from 'react-router-dom'
+import { makeStyles } from '@mui/styles'
 
+const useStyles = makeStyles({
+  link: {
+    margin: '0 16px'
+  }
+})
 const Navbar = () => {
+  const classes = useStyles()
+
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu">
-          X
-        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           RSS Reader
         </Typography>
-        <Button color="inherit">Add new Feeds</Button>
-        <Button color="inherit">Feeds</Button>
-        <Button color="inherit">About</Button>
+        <Link color="inherit" to="/add-new-feed">
+          Add new Feed
+        </Link>
+        <Link className={classes.link} color="inherit" to="/feeds">
+          Feeds
+        </Link>
+        <Link color="inherit" to="/about">
+          About
+        </Link>
       </Toolbar>
     </AppBar>
   )
