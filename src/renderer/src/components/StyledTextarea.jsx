@@ -1,7 +1,7 @@
 import TextareaAutosize from '@mui/base/TextareaAutosize'
 import { styled } from '@mui/system'
 
-export default function StyledTextarea() {
+export default function StyledTextarea({ onChange, value }) {
   const blue = {
     100: '#DAECFF',
     200: '#b6daff',
@@ -55,5 +55,13 @@ export default function StyledTextarea() {
   `
   )
 
-  return <StyledTextarea aria-label="empty textarea" placeholder="RSS Feed" minRows={5} />
+  return (
+    <StyledTextarea
+      onChange={onChange}
+      value={value}
+      aria-label="empty textarea"
+      placeholder="RSS Feed"
+      minRows={5}
+    />
+  )
 }

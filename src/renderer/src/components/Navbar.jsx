@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom'
 import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles({
+  root: {
+    '& a': {
+      color: 'white',
+      textDecoration: 'none',
+      '&:hover': {
+        color: '#122'
+      }
+    }
+  },
   feed: {
     margin: '0 16px'
   }
@@ -11,7 +20,7 @@ const Navbar = () => {
   const classes = useStyles()
 
   return (
-    <AppBar position="fixed">
+    <AppBar position="fixed" className={classes.root}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           RSS Reader
@@ -19,10 +28,10 @@ const Navbar = () => {
         <Link color="inherit" to="/add-new-feed">
           Add New Feed
         </Link>
-        <Link className={classes.feed} color="inherit" to="/feeds">
+        <Link className={classes.feed} color="red" to="/">
           Feeds
         </Link>
-        <Link color="inherit" to="/about">
+        <Link color="white" to="/about">
           About
         </Link>
       </Toolbar>

@@ -5,7 +5,6 @@ import { CssBaseline } from '@mui/material'
 
 import App from './App'
 import ErrorPage from './error-page'
-import './assets/index.css'
 import AddNewFeeds from './routes/AddNewFeeds'
 import Feeds from './routes/Feeds'
 import About from './routes/About'
@@ -17,12 +16,12 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/add-new-feed',
-        element: <AddNewFeeds />
+        path: '/',
+        element: <Feeds />
       },
       {
-        path: '/feeds',
-        element: <Feeds />
+        path: '/add-new-feed',
+        element: <AddNewFeeds />
       },
       {
         path: '/about',
