@@ -26,7 +26,7 @@ app.post('/config', (req, res) => {
 
   // force a re-run of scraper
   startScraper(true)
-  
+
   res.send(currentFeeds)
 })
 

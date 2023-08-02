@@ -152,6 +152,7 @@ const indefiniteScraper = () => {
   startScraper()
 
   setTimeout(indefiniteScraper, INTERNAL_SCRAPE_CHECKER_MS)
+  logger.info('start scraper')
 }
 
 module.exports = {

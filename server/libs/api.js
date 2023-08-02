@@ -15,7 +15,7 @@ const getRssFromDb = () => {
     items.forEach((item) => {
       jobs.push({
         ...item,
-        url,
+        feedUrl: url,
         scrapedAt
       })
     })
