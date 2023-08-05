@@ -12,9 +12,9 @@ import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
 import axios from 'axios'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Accordion, AccordionDetails, AccordionSummary, Chip, Stack } from '@mui/material'
 
 import { BASE_URL } from '../api/api'
-import { Accordion, AccordionDetails, AccordionSummary, Chip, Stack } from '@mui/material'
 import { toLocalDate } from '../../util/localDate'
 
 const drawerWidth = 240
@@ -27,10 +27,19 @@ export default function HomeFeeds() {
     try {
       const response = await axios(`${BASE_URL}/jobs`)
       if (response.status === 200) {
+        const prevJobs = jobs
+
+        // Update the state with the new fetched jobs
         setJobs(response.data.jobs)
         setUpdatedAt(toLocalDate(response.data.updatedAt))
 
-        response.data.jobs.slice(0, 3).map((job) => {
+        // Find the new jobs that are not present in the previous jobs
+        const newJobs = response.data.jobs.filter(
+          (newJob) => !prevJobs.some((prevJob) => prevJob.link === newJob.link)
+        )
+        console.log(newJobs)
+
+        newJobs.data.jobs.map((job) => {
           new window.Notification(job.title, {
             body: job.summary
           })
@@ -54,7 +63,7 @@ export default function HomeFeeds() {
     }
   }, [fetchJobs])
 
-  console.log(jobs)
+  // console.log(jobs)
 
   return (
     <Box sx={{ display: 'flex' }}>
