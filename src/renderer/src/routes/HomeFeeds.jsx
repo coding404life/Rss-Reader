@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
-import Drawer from '@mui/material/Drawer'
-import List from '@mui/material/List'
+// import Drawer from '@mui/material/Drawer'
+// import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
+// import Divider from '@mui/material/Divider'
+// import ListItem from '@mui/material/ListItem'
+// import ListItemButton from '@mui/material/ListItemButton'
+// import ListItemIcon from '@mui/material/ListItemIcon'
+// import ListItemText from '@mui/material/ListItemText'
+// import InboxIcon from '@mui/icons-material/MoveToInbox'
+// import MailIcon from '@mui/icons-material/Mail'
 import axios from 'axios'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Chip, Stack } from '@mui/material'
@@ -17,57 +17,61 @@ import { Accordion, AccordionDetails, AccordionSummary, Chip, Stack } from '@mui
 import { BASE_URL } from '../api/api'
 import { toLocalDate } from '../../util/localDate'
 
-const drawerWidth = 240
+// const drawerWidth = 240
 
 export default function HomeFeeds() {
   const [jobs, setJobs] = useState([])
   const [updatedAt, setUpdatedAt] = useState('')
+  const prevJobsRef = useRef([])
 
-  const fetchJobs = useCallback(async () => {
+  const fetchJobs = async () => {
     try {
       const response = await axios(`${BASE_URL}/jobs`)
-      if (response.status === 200) {
-        const prevJobs = jobs
+      const prevJobs = prevJobsRef.current
 
-        // Update the state with the new fetched jobs
+      if (response.status === 200) {
         setJobs(response.data.jobs)
         setUpdatedAt(toLocalDate(response.data.updatedAt))
+        prevJobsRef.current = response.data.jobs
+      }
 
-        // Find the new jobs that are not present in the previous jobs
+      if (prevJobs.length) {
         const newJobs = response.data.jobs.filter(
           (newJob) => !prevJobs.some((prevJob) => prevJob.link === newJob.link)
         )
+
+        console.log(prevJobs)
         console.log(newJobs)
 
-        newJobs.data.jobs.map((job) => {
-          new window.Notification(job.title, {
-            body: job.summary
+        if (newJobs.length) {
+          newJobs.map((job) => {
+            new window.Notification(job.title, {
+              body: job.summary
+            })
           })
-        })
+        }
       }
     } catch (error) {
       console.error('Error fetching data:', error)
     }
-  }, [])
+  }
 
   useEffect(() => {
     // Fetch data initially when the component mounts
     fetchJobs()
 
     // Fetch data every 10 seconds
-    const intervalId = setInterval(fetchJobs, 60000)
+    const intervalId = setInterval(fetchJobs, 10000)
 
     // Cleanup function to clear the interval when the component unmounts
     return () => {
       clearInterval(intervalId)
     }
-  }, [fetchJobs])
-
-  // console.log(jobs)
+  }, [])
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Drawer
+      {/* <Drawer
         variant="permanent"
         sx={{
           width: drawerWidth,
@@ -103,7 +107,7 @@ export default function HomeFeeds() {
             ))}
           </List>
         </Box>
-      </Drawer>
+      </Drawer> */}
 
       <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: 7 }}>
         <Box mb={2}>

@@ -6,7 +6,7 @@ const cors = require('cors')
 const { getRssFromDb } = require('./libs/api')
 const { startScraper, indefiniteScraper } = require('./libs/scraper')
 
-const PORT = 5555
+const PORT = process.env.PORT || 5555
 
 /** Middlewares **/
 app.use(express.json())
