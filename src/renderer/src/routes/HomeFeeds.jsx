@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 // import MailIcon from '@mui/icons-material/Mail'
 import axios from 'axios'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Accordion, AccordionDetails, AccordionSummary, Chip, Stack } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Button, Chip, Stack } from '@mui/material'
 
 import { BASE_URL } from '../api/api'
 import { toLocalDate } from '../../util/localDate'
@@ -69,6 +69,18 @@ export default function HomeFeeds() {
     }
   }, [])
 
+  function getTimeDifference(createdAt) {
+    const createdDate = new Date(createdAt)
+    const currentDate = new Date()
+
+    const timeDifference = currentDate - createdDate // Difference in milliseconds
+
+    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60))
+
+    return `Posted ${hours}:${minutes} Hours ago`
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       {/* <Drawer
@@ -113,6 +125,7 @@ export default function HomeFeeds() {
         <Box mb={2}>
           <Typography variant="h5">Updated at: {updatedAt}</Typography>
         </Box>
+
         {jobs.map((job) => (
           <Accordion key={job.link}>
             <AccordionSummary
@@ -120,14 +133,30 @@ export default function HomeFeeds() {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Box display="flex" flexDirection="column">
-                <Typography variant="h6">{job.title}</Typography>
-                <Typography variant="body1" color="gray">
-                  Posted at: {toLocalDate(job.createdAt)}
-                </Typography>
-                <Typography variant="body1" color="gray">
-                  {job.meta.hourlyRange ? job.meta.hourlyRange : 'Hourly Not specified'}
-                </Typography>
+              <Box display="flex" flexDirection="column" width="100%">
+                <Box pl={0.5} pr={2}>
+                  <Typography variant="h6">{job.title}</Typography>
+                  <Typography variant="body1" color="gray">
+                    Posted at: {toLocalDate(job.createdAt)}
+                  </Typography>
+                  <Typography variant="body1" color="gray">
+                    {getTimeDifference(job.createdAt)}
+                  </Typography>
+                  <Typography variant="body1" color="primary">
+                    {job.meta.country}
+                  </Typography>
+
+                  <Box mb={1}>
+                    <Typography variant="body1" color="gray">
+                      {job.meta.hourlyRange
+                        ? `Hourly ${job.meta.hourlyRange}`
+                        : 'No Hourly Rate Specified'}
+                    </Typography>
+                    <Typography variant="body1" color="gray">
+                      {job.meta.budget ? `Fixed ${job.meta.budget}` : 'No Fixed Rate Specified'}
+                    </Typography>
+                  </Box>
+                </Box>
 
                 <Stack direction="row" spacing={1} flexWrap="wrap">
                   {job.meta.skills.map((skill) => (
@@ -142,21 +171,25 @@ export default function HomeFeeds() {
                 </Stack>
               </Box>
             </AccordionSummary>
+
             <AccordionDetails>
               <Box display="flex" flexDirection="column">
                 <Typography sx={{ mb: 2 }} variant="body1">
                   {job.summary}
                 </Typography>
-                <Typography
-                  component="a"
-                  href={job.link}
-                  rel="noreferrer"
-                  target="_blank"
-                  sx={{ textDecoration: 'none' }}
-                  color="primary"
-                >
-                  Job Link
-                </Typography>
+
+                <Box display="flex" justifyContent="flex-end">
+                  <Button
+                    component="a"
+                    variant="outlined"
+                    href={job.link}
+                    rel="noreferrer"
+                    target="_blank"
+                    color="secondary"
+                  >
+                    Job Link
+                  </Button>
+                </Box>
               </Box>
             </AccordionDetails>
           </Accordion>
