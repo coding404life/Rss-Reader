@@ -7,7 +7,7 @@ import { BASE_URL } from '../api/api'
 export default function AddNewFeeds() {
   const [interval, setInterval] = useState(0)
   const [rssFeeds, setRssFeeds] = useState('') // State for RSS Feeds
-  console.log(interval)
+
   const handleSubmit = async () => {
     const rssUrls = rssFeeds.trim().split('\n').filter(Boolean)
 
@@ -30,7 +30,7 @@ export default function AddNewFeeds() {
       try {
         const response = await axios(`${BASE_URL}/config`)
         if (response.status === 200) {
-          setInterval(response.data.rss.interval)
+          setInterval(response.data.rss.intervalInSec)
           setRssFeeds(response.data.rss.urls[0])
         }
       } catch (error) {
