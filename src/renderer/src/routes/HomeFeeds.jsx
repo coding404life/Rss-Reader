@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 // import MailIcon from '@mui/icons-material/Mail'
 import axios from 'axios'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Accordion, AccordionDetails, AccordionSummary, Button, Chip, Stack } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Chip, Stack } from '@mui/material'
 
 import { BASE_URL } from '../api/api'
 import { toLocalDate } from '../../util/localDate'
@@ -135,15 +135,25 @@ export default function HomeFeeds() {
             >
               <Box display="flex" flexDirection="column" width="100%">
                 <Box pl={0.5} pr={2}>
-                  <Typography variant="h6">{job.title}</Typography>
+                  <Typography
+                    rel="noreferrer"
+                    target="_blank"
+                    color="primary"
+                    sx={{ textDecoration: 'none' }}
+                    component="a"
+                    href={job.link}
+                    variant="h6"
+                  >
+                    {job.title}
+                  </Typography>
+                  <Typography variant="body1" color="primary">
+                    {job.meta.country}
+                  </Typography>
                   <Typography variant="body1" color="gray">
                     Posted at: {toLocalDate(job.createdAt)}
                   </Typography>
                   <Typography variant="body1" color="gray">
                     {getTimeDifference(job.createdAt)}
-                  </Typography>
-                  <Typography variant="body1" color="primary">
-                    {job.meta.country}
                   </Typography>
 
                   <Box mb={1}>
@@ -159,7 +169,7 @@ export default function HomeFeeds() {
                 </Box>
 
                 <Stack direction="row" spacing={1} flexWrap="wrap">
-                  {job.meta.skills.map((skill) => (
+                  {job.meta.skills?.map((skill) => (
                     <Chip
                       sx={{ mb: 0.5 }}
                       key={skill}
@@ -173,24 +183,9 @@ export default function HomeFeeds() {
             </AccordionSummary>
 
             <AccordionDetails>
-              <Box display="flex" flexDirection="column">
-                <Typography sx={{ mb: 2 }} variant="body1">
-                  {job.summary}
-                </Typography>
-
-                <Box display="flex" justifyContent="flex-end">
-                  <Button
-                    component="a"
-                    variant="outlined"
-                    href={job.link}
-                    rel="noreferrer"
-                    target="_blank"
-                    color="secondary"
-                  >
-                    Job Link
-                  </Button>
-                </Box>
-              </Box>
+              <Typography sx={{ mb: 2 }} variant="body1">
+                {job.summary}
+              </Typography>
             </AccordionDetails>
           </Accordion>
         ))}
