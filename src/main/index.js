@@ -1,9 +1,38 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, nativeImage, Menu, Tray } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+const path = require('path')
+
+let tray = null
+function createTray() {
+  const icon = path.join(__dirname, '/app.png') // required.
+  const trayicon = nativeImage.createFromPath(icon)
+  tray = new Tray(trayicon.resize({ width: 16 }))
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show App',
+      click: () => {
+        createWindow()
+      }
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        app.quit() // actually quit the app.
+      }
+    }
+  ])
+
+  tray.setContextMenu(contextMenu)
+}
 
 function createWindow() {
+  if (!tray) {
+    // if tray hasn't been created already.
+    createTray()
+  }
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -65,7 +94,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.hide()
   }
 })
 
