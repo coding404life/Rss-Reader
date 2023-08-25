@@ -27,29 +27,11 @@ export default function HomeFeeds() {
   const fetchJobs = async () => {
     try {
       const response = await axios(`${BASE_URL}/jobs`)
-      const prevJobs = prevJobsRef.current
 
       if (response.status === 200) {
         setJobs(response.data.jobs)
         setUpdatedAt(toLocalDate(response.data.updatedAt))
         prevJobsRef.current = response.data.jobs
-      }
-
-      if (prevJobs.length) {
-        const newJobs = response.data.jobs.filter(
-          (newJob) => !prevJobs.some((prevJob) => prevJob.link === newJob.link)
-        )
-
-        console.log(prevJobs)
-        console.log(newJobs)
-
-        if (newJobs.length) {
-          newJobs.map((job) => {
-            new window.Notification(job.title, {
-              body: job.summary
-            })
-          })
-        }
       }
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -59,14 +41,6 @@ export default function HomeFeeds() {
   useEffect(() => {
     // Fetch data initially when the component mounts
     fetchJobs()
-
-    // Fetch data every 10 seconds
-    const intervalId = setInterval(fetchJobs, 10000)
-
-    // Cleanup function to clear the interval when the component unmounts
-    return () => {
-      clearInterval(intervalId)
-    }
   }, [])
 
   function getTimeDifference(createdAt) {
