@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, nativeImage, Menu, Tray } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { sendNotifications } from './notifications'
 const path = require('path')
 
 let tray = null
@@ -81,6 +82,8 @@ app.whenReady().then(() => {
   })
 
   createWindow()
+
+  setInterval(sendNotifications, 3000)
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
